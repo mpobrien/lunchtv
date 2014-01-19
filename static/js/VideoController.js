@@ -39,6 +39,7 @@ function VideoController($scope, $window){
                     iv_load_policy:3,
                     controls:0,
                     modestbranding:1,
+                    showinfo:0,
                     rel:0
                 },
                 events: {
