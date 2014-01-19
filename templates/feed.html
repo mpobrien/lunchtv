@@ -1,0 +1,19 @@
+<html>
+  <body>
+    <ul>
+      {% for l in links %}
+        <li>
+        <a href="{{l.link}}">{{l.link}}</a>
+        {% if l.comments and l.comments.data %}
+          <ul>
+            {% for c in l.comments.data %}
+            <li> {{c.from.name}}: {{c.message}}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {#% {{l}} %#}
+        </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
