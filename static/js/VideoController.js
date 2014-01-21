@@ -1,23 +1,28 @@
 function VideoController($scope, $window){
     var done = false;
+    $scope.videos = $window.videoIds
     $scope.currentPos = 0
+    /*
     $scope.videos = [
         {type:"youtube", id:"sJgDYdA8dio"},
         {type:"youtube", id:"HyophYBP_w4"},
         {type:"youtube", id:"Plz-bhcHryc"},
         {type:"youtube", id:"oI6uYJrIqaw"},
-    ]
+    ]*/
 
     // 4. The API will call this function when the video player is ready.
     $scope.onPlayerReady = function(event){
         event.target.playVideo();
     }
 
+    $scope.nextVideo = function(){
+        nextVideoId = $scope.videos[++$scope.currentPos]
+        console.log("launching next video", nextVideoId)
+        $scope.player.loadVideoById(nextVideoId)//, 5, "large")
+    }
     $scope.onPlayerStateChange = function(event){
         if(event.data == YT.PlayerState.ENDED){
-            nextVideoId = $scope.videos[++$scope.currentPos].id
-            console.log("launching next video", nextVideoId)
-            $scope.player.loadVideoById(nextVideoId)//, 5, "large")
+            $scope.nextVideo()
         }
     }
 
@@ -50,7 +55,15 @@ function VideoController($scope, $window){
         }
     }
 
-    $scope.launchFirstVideo($scope.videos[$scope.currentPos].id)
+    $scope.keyPressed = function($event){
+        console.log("here", $event)
+        if($event.which == 110){
+            $scope.nextVideo()
+        }
+    }
+
+    $scope.launchFirstVideo($scope.videos[$scope.currentPos])
+    //setInterval(function(){$('body').focus(); console.log("asfaf")}, 500)
 
 }
 

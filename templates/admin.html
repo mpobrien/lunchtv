@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/admin.js"></script>
+     <script src="https://apis.google.com/js/client.js?onload=load"></script>
+
+    <script type="text/javascript">
+      var videoIds = {{videos|tojson}}
+    </script>
+  </head>
+  <body ng-app ="lunchTvApp">
+    <form method="post" ng-controller="VideoForm" ng-submit="submit()">
+      <div>
+        <input type="text" ng-model="newVideoId"/>
+      </div>
+      <ul ng-repeat="v in videoIds">
+        <li><a ng-click="deleteVideo(v)" href="">[X]</a> &nbsp;[[v]] </li>
+      </ul>
+    </form>
+  </body>
+</html>

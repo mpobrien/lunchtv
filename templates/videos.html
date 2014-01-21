@@ -1,11 +1,25 @@
-<html>
+<html ng-app>
   <head>
     <script type="text/javascript" src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="/static/js/VideoController.js"></script>
+    <script type="text/javascript">
+      var videoIds = {{videos|tojson}}
+    </script>
+    <style type="text/css">
+      #overlay{
+        position:absolute;
+        z-index:1000;
+        top:0px;
+        bottom:0px;
+        height:100%;
+        width:100%;
+      }
+    </style>
   </head>
-  <body ng-app>
-    <div ng-controller="VideoController" ng-init="setupIframe()">
+  <body ng-controller="VideoController" ng-init="setupIframe()" ng-keypress="keyPressed($event)">
+    <div id="overlay">ds</div>
+    <div>
       <div id="player"></div>
     </div>
   </body>
