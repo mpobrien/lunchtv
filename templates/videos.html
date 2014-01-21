@@ -15,10 +15,18 @@
         height:100%;
         width:100%;
       }
+
+      .bug{
+        position:absolute;
+        right:10px;
+        bottom:30px;
+        opacity:0.6;
+      }
     </style>
   </head>
   <body ng-controller="VideoController" ng-init="setupIframe()" ng-keypress="keyPressed($event)">
     <div id="overlay">ds</div>
+    <img src="http://lunch.tv/images/logogif_1.gif" class="bug" width="100px"/>
     <div>
       <div id="player"></div>
     </div>
