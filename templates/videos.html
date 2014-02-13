@@ -1,12 +1,16 @@
-<html ng-app>
+<html ng-app="lunchtv">
   <head>
     <script type="text/javascript" src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="/static/js/VideoController.js"></script>
     <script type="text/javascript">
-      var videoIds = {{videos|tojson}}
+      var videoIds = {{videos|tojson_special|safe}}
     </script>
     <style type="text/css">
+      @font-face{
+        font-family: 'Kabel';
+        src: url('/static/Kabel.ttf');
+      }
       #overlay{
         position:absolute;
         z-index:1000;
@@ -22,13 +26,34 @@
         bottom:30px;
         opacity:0.6;
       }
+
+      .blurb{
+        bottom:30px;
+        left: 10px;
+        color: white;
+        font-weight:bold;
+        font-size:20px;
+        z-index:1000;
+        position:absolute;
+        font-family:'Kabel';/*,'Century Gothic', sans-serif;*/
+      }
+      .blurb ul{
+        list-style:none;
+      }
     </style>
   </head>
   <body ng-controller="VideoController" ng-init="setupIframe()" ng-keypress="keyPressed($event)">
     <div id="overlay">ds</div>
-    <img src="http://lunch.tv/images/logogif_1.gif" class="bug" width="100px"/>
+    <!--img src="http://lunch.tv/images/logogif_1.gif" class="bug" width="100px"/-->
     <div>
       <div id="player"></div>
+    </div>
+    <div class="blurb">
+      <ul>
+        <li>[[currentVideo.details.title]]</li>
+        <li>[[currentVideo.details.publishedAt|date:'shortDate']]</li>
+        <li>[[currentVideo.details.channeltitle]]</li>
+      </ul>
     </div>
   </body>
 </html>

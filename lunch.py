@@ -1,6 +1,7 @@
 #from flask_oauth import OAuth
 from flask import Flask, url_for, request, render_template
 import json
+from datetime import datetime
 from pymongo import MongoClient
 import requests
 
@@ -12,8 +13,8 @@ db = MongoClient()['lunch']
 
 @app.route("/videos")
 def videos():
-    videos = db.videos.find()
-    return render_template("videos.html", videos=[v['videoId'] for v in videos])
+    videos = db.videos.find({},{"_id":0})
+    return render_template("videos.html", videos=[v for v in videos])
 
 @app.route("/admin/video", methods=["POST"])
 def addvideo():
@@ -34,6 +35,11 @@ def deletevideo(videoid):
 def admin():
     videos = db.videos.find()
     return render_template("admin.html", videos=[v['videoId'] for v in videos])
+
+@app.template_filter('tojson_special')
+def tojson_special(dateobj):
+    dthandler = lambda obj: int(obj.strftime("%s")) * 1000 if isinstance(obj, datetime) else None
+    return json.dumps(dateobj, default=dthandler)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

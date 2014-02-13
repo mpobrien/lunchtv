@@ -1,22 +1,23 @@
-function VideoController($scope, $window){
+var lunchtv = angular.module('lunchtv', [])
+lunchtv.config(function($interpolateProvider) {
+  $interpolateProvider.startSymbol('[[');
+  $interpolateProvider.endSymbol(']]');
+});
+lunchtv.controller('VideoController', function($scope, $window) {
     var done = false;
     $scope.videos = $window.videoIds
     $scope.currentPos = 0
-    /*
-    $scope.videos = [
-        {type:"youtube", id:"sJgDYdA8dio"},
-        {type:"youtube", id:"HyophYBP_w4"},
-        {type:"youtube", id:"Plz-bhcHryc"},
-        {type:"youtube", id:"oI6uYJrIqaw"},
-    ]*/
 
     // 4. The API will call this function when the video player is ready.
     $scope.onPlayerReady = function(event){
+        
         event.target.playVideo();
     }
 
     $scope.nextVideo = function(){
-        nextVideoId = $scope.videos[++$scope.currentPos]
+        nextVideo = $scope.videos[++$scope.currentPos]
+        nextVideoId = nextVideo.videoId
+        $scope.currentVideo = nextVideo
         console.log("launching next video", nextVideoId)
         $scope.player.loadVideoById(nextVideoId)//, 5, "large")
     }
@@ -30,7 +31,8 @@ function VideoController($scope, $window){
         player.stopVideo();
     }
 
-    $scope.launchFirstVideo = function(videoId){
+    $scope.launchFirstVideo = function(video){
+        $scope.currentVideo = video
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -39,7 +41,7 @@ function VideoController($scope, $window){
             $scope.player = new YT.Player('player', {
                 height: '100%',
                 width: '100%',
-                videoId:videoId,
+                videoId:video.videoId,
                 playerVars:{
                     iv_load_policy:3,
                     controls:0,
@@ -63,8 +65,6 @@ function VideoController($scope, $window){
     }
 
     $scope.launchFirstVideo($scope.videos[$scope.currentPos])
-    //setInterval(function(){$('body').focus(); console.log("asfaf")}, 500)
-
-}
+})
 
 
