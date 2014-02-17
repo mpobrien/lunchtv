@@ -7,12 +7,23 @@ lunchtv.controller('VideoController', function($scope, $window) {
     var done = false;
     $scope.videos = $window.videoIds
     $scope.currentPos = 0
+    $scope.infoFadeTimeout =null
 
     // 4. The API will call this function when the video player is ready.
     $scope.onPlayerReady = function(event){
-        
         event.target.playVideo();
     }
+
+    $scope.doFadeInfo = function(){
+      $('.blurb').fadeIn(0)
+      if($scope.infoFadeTimeout){
+        clearTimeout($scope.infoFadeTimeout)
+      }
+      $scope.infoFadeTimeout = setTimeout(function(){
+        $('.blurb').fadeOut(1000)
+      }, 4500)
+    }
+
 
     $scope.nextVideo = function(){
         nextVideo = $scope.videos[++$scope.currentPos]
@@ -20,6 +31,7 @@ lunchtv.controller('VideoController', function($scope, $window) {
         $scope.currentVideo = nextVideo
         console.log("launching next video", nextVideoId)
         $scope.player.loadVideoById(nextVideoId)//, 5, "large")
+        $scope.doFadeInfo()
     }
     $scope.onPlayerStateChange = function(event){
         if(event.data == YT.PlayerState.ENDED){
@@ -37,6 +49,7 @@ lunchtv.controller('VideoController', function($scope, $window) {
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        $scope.doFadeInfo()
         $window.onYouTubeIframeAPIReady = function() {
             $scope.player = new YT.Player('player', {
                 height: '100%',
