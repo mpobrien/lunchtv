@@ -11,6 +11,9 @@
         font-family: 'Kabel';
         src: url('/static/Kabel.ttf');
       }
+      body{
+        margin:0px;
+      }
       #overlay{
         position:absolute;
         z-index:1000;
@@ -43,7 +46,7 @@
     </style>
   </head>
   <body ng-controller="VideoController" ng-init="setupIframe()" ng-keypress="keyPressed($event)">
-    <div id="overlay">ds</div>
+    <div id="overlay"></div>
     <!--img src="http://lunch.tv/images/logogif_1.gif" class="bug" width="100px"/-->
     <div>
       <div id="player"></div>
