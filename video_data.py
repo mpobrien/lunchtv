@@ -15,12 +15,15 @@ def add_video_data():
         print vidId
         response = requests.get(VID_URL % (vidId, APIKEY)) 
         video_data = json.loads(response.text)
-        info = video_data['items'][0]['snippet']
-        print info
-        details = {"title": info["title"], 
-                   "publishedAt": datetime.strptime(info["publishedAt"], "%Y-%m-%dT%H:%M:%S.000Z"),
-                   "description": info["description"],
-                   "channeltitle": info["channelTitle"]}
+        items = video_data.get('items', [])
+        details = {}
+        if items:
+            info = items[0].get('snippet',None)
+            if info:
+                details = {"title": info["title"], 
+                           "publishedAt": datetime.strptime(info["publishedAt"], "%Y-%m-%dT%H:%M:%S.000Z"),
+                           "description": info["description"],
+                           "channeltitle": info["channelTitle"]}
         db.videos.update({"_id":video['_id']}, {"$set":{"details":details}})
 
 def main():
