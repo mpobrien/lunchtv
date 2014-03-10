@@ -6,6 +6,7 @@ lunchtv.config(function($interpolateProvider) {
 lunchtv.controller('VideoController', function($scope, $window) {
     var done = false;
     $scope.videos = $window.videoIds
+    $scope.videos.unshift({"videoId": "3YssYJUNkXo"})
     $scope.currentPos = 0
     $scope.infoFadeTimeout =null
 
@@ -21,7 +22,7 @@ lunchtv.controller('VideoController', function($scope, $window) {
       }
       $scope.infoFadeTimeout = setTimeout(function(){
         $('.blurb').fadeOut(1000)
-      }, 4500)
+      }, 10000)
     }
 
 
