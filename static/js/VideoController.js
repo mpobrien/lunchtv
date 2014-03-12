@@ -1,14 +1,30 @@
+BUMPER_INTERVAL = 10
 var lunchtv = angular.module('lunchtv', [])
 lunchtv.config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('[[');
   $interpolateProvider.endSymbol(']]');
 });
+
+bumpers = [
+  {"videoId":"3YssYJUNkXo"},
+  {"videoId":"e3l0BQff2Co"},
+  {"videoId":"Ys69g1sPHAo"},
+  {"videoId":"y8JlkI2Fu_U"},
+  {"videoId":"t_flfX6_7xY"},
+  {"videoId":"3saHUMoUznE"},
+]
+
+nextKeys = [ 121, 104, 98, 117, 106, 105, 107, 109, 111,
+             108, 44, 112, 59, 46, 91, 39, 47, 93, 13 ]
+
 lunchtv.controller('VideoController', function($scope, $window) {
     var done = false;
     $scope.videos = $window.videoIds
     $scope.videos.unshift({"videoId": "3YssYJUNkXo"})
     $scope.currentPos = 0
     $scope.infoFadeTimeout =null
+    $scope.bumperCounter = 0
+    $scope.bumperNext = 0
 
     // 4. The API will call this function when the video player is ready.
     $scope.onPlayerReady = function(event){
@@ -27,12 +43,19 @@ lunchtv.controller('VideoController', function($scope, $window) {
 
 
     $scope.nextVideo = function(){
+      $scope.bumperCounter = ($scope.bumperCounter + 1) % BUMPER_INTERVAL
+      if($scope.bumperCounter == 0){
+        $scope.bumperNext = ($scope.bumperNext+1) % bumpers.length
+        nextVideo = bumpers[$scope.bumperNext]
+        nextVideoId = nextVideo.videoId
+        $scope.currentVideo = nextVideo
+      }else{
         nextVideo = $scope.videos[++$scope.currentPos]
         nextVideoId = nextVideo.videoId
         $scope.currentVideo = nextVideo
-        console.log("launching next video", nextVideoId)
-        $scope.player.loadVideoById(nextVideoId)//, 5, "large")
-        $scope.doFadeInfo()
+      }
+      $scope.player.loadVideoById(nextVideoId)//, 5, "large")
+      $scope.doFadeInfo()
     }
     $scope.onPlayerStateChange = function(event){
         if(event.data == YT.PlayerState.ENDED){
@@ -72,8 +95,8 @@ lunchtv.controller('VideoController', function($scope, $window) {
     }
 
     $scope.keyPressed = function($event){
-        console.log("here", $event)
-        if($event.which == 110){
+        console.log($event, $event.which)
+        if(nextKeys.indexOf($event.which) >= 0){
             $scope.nextVideo()
         }
     }
