@@ -25,9 +25,11 @@ lunchtv.controller('VideoController', function($scope, $window) {
     $scope.infoFadeTimeout =null
     $scope.bumperCounter = 0
     $scope.bumperNext = 0
+    $scope.player = null
 
     setInterval(function(){
-      if($scope.player.getPlayerState() == YT.PlayerState.PLAYING 
+      if($scope.player != null && 
+         $scope.player.getPlayerState() == YT.PlayerState.PLAYING 
          && $scope.player.getDuration() > 0
          && ($scope.player.getDuration() - $scope.player.getCurrentTime() <= 5)) {
          $scope.doFadeInfo(true)
