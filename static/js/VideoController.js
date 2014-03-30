@@ -26,21 +26,32 @@ lunchtv.controller('VideoController', function($scope, $window) {
     $scope.bumperCounter = 0
     $scope.bumperNext = 0
 
+    setInterval(function(){
+      if($scope.player.getPlayerState() == YT.PlayerState.PLAYING 
+         && $scope.player.getDuration() > 0
+         && ($scope.player.getDuration() - $scope.player.getCurrentTime() <= 5)) {
+         $scope.doFadeInfo(true)
+      }
+    }, 1000)
+
     // 4. The API will call this function when the video player is ready.
     $scope.onPlayerReady = function(event){
         event.target.playVideo();
     }
 
-    $scope.doFadeInfo = function(){
-      $('.blurb').fadeIn(0)
+    $scope.doFadeInfo = function(fadein){
+      if(fadein){
+        $('#blurb').fadeIn(1000)
+      }else{
+        $('#blurb').fadeIn(0)
+      }
       if($scope.infoFadeTimeout){
         clearTimeout($scope.infoFadeTimeout)
       }
       $scope.infoFadeTimeout = setTimeout(function(){
-        $('.blurb').fadeOut(1000)
-      }, 10000)
+        $('#blurb').fadeOut(1000)
+      }, 5000)
     }
-
 
     $scope.nextVideo = function(){
       $scope.bumperCounter = ($scope.bumperCounter + 1) % BUMPER_INTERVAL
@@ -59,7 +70,10 @@ lunchtv.controller('VideoController', function($scope, $window) {
     }
     $scope.onPlayerStateChange = function(event){
         if(event.data == YT.PlayerState.ENDED){
+            console.log("going to next video")
             $scope.nextVideo()
+            console.log($scope.currentVideo)
+            $scope.$apply()
         }
     }
 
@@ -96,6 +110,15 @@ lunchtv.controller('VideoController', function($scope, $window) {
 
     $scope.keyPressed = function($event){
         console.log($event, $event.which)
+        if($event.which==32){
+          var state = $scope.player.getPlayerState()
+          if(state==YT.PlayerState.PLAYING){
+            $scope.player.pauseVideo()
+          }else if(state==YT.PlayerState.PAUSED){
+            $scope.player.playVideo()
+          }
+          return
+        }
         if(nextKeys.indexOf($event.which) >= 0){
             $scope.nextVideo()
         }
