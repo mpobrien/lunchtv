@@ -17,7 +17,7 @@ bumpers = [
 nextKeys = [ 121, 104, 98, 117, 106, 105, 107, 109, 111,
              108, 44, 112, 59, 46, 91, 39, 47, 93, 13 ]
 
-lunchtv.controller('VideoController', function($scope, $window) {
+lunchtv.controller('VideoController', function($scope, $window, $http) {
     var done = false;
     $scope.videos = $window.videoIds
     $scope.videos.unshift({"videoId": "3YssYJUNkXo"})
@@ -28,7 +28,8 @@ lunchtv.controller('VideoController', function($scope, $window) {
     $scope.player = null
 
     setInterval(function(){
-      if($scope.player != null && 
+      if($scope.player && 
+         $scope.player.getPlayerState && 
          $scope.player.getPlayerState() == YT.PlayerState.PLAYING 
          && $scope.player.getDuration() > 0
          && ($scope.player.getDuration() - $scope.player.getCurrentTime() <= 5)) {
@@ -63,12 +64,28 @@ lunchtv.controller('VideoController', function($scope, $window) {
         nextVideoId = nextVideo.videoId
         $scope.currentVideo = nextVideo
       }else{
-        nextVideo = $scope.videos[++$scope.currentPos]
-        nextVideoId = nextVideo.videoId
-        $scope.currentVideo = nextVideo
+        if($scope.currentPos == $scope.videos.length-1){
+          //need a new video
+          $http({method: 'GET', url: '/next'}).
+            success(function(data, status, headers, config) {
+              console.log(data)
+              $scope.videos.push(data)
+              nextVideo = $scope.videos[++$scope.currentPos]
+              nextVideoId = nextVideo.videoId
+              $scope.currentVideo = nextVideo
+              $scope.player.loadVideoById(nextVideoId)
+              $scope.doFadeInfo()
+            }).
+            error(function(data, status, headers, config) {
+            });
+        }else{
+          nextVideo = $scope.videos[++$scope.currentPos]
+          nextVideoId = nextVideo.videoId
+          $scope.currentVideo = nextVideo
+          $scope.player.loadVideoById(nextVideoId)
+          $scope.doFadeInfo()
+        }
       }
-      $scope.player.loadVideoById(nextVideoId)//, 5, "large")
-      $scope.doFadeInfo()
     }
     $scope.onPlayerStateChange = function(event){
         if(event.data == YT.PlayerState.ENDED){

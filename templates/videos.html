@@ -19,6 +19,10 @@
         font-family: 'Kabel';
         src: url('/static/Kabel.ttf');
       }
+      @font-face{
+        font-family: 'GothamRounded';
+        src: url('/static/GothamRnd-Medium.otf');
+      }
       body{
         margin:0px;
       }
@@ -31,22 +35,22 @@
         width:100%;
       }
 
-      .bug{
-        position:absolute;
-        right:10px;
-        bottom:30px;
-        opacity:0.6;
-      }
-
       #blurb{
-        bottom:30px;
+        bottom:75px;
         left: 10px;
         color: white;
         font-weight:bold;
         font-size:20px;
         z-index:1000;
         position:absolute;
-        font-family:'Kabel';/*,'Century Gothic', sans-serif;*/
+        text-shadow: 0px 2px 0px rgba(0,0,0,0.50);
+        font-family: GothamRounded;
+        font-size: 20px;
+        color: #FFFFFF;
+        line-height: 25px;
+        letter-spacing: 1px;
+
+
       }
       #blurb ul{
         list-style:none;
@@ -62,8 +66,8 @@
       }
       #bug a{
         position:absolute;
-        right:20px;
-        bottom:20px;
+        left:20px;
+        bottom:5px;
         width:75px;
         height:60px;
         background:url('/static/bug_rest.png')
