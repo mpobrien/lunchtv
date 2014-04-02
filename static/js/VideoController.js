@@ -64,20 +64,19 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
         nextVideoId = nextVideo.videoId
         $scope.currentVideo = nextVideo
       }else{
-        if($scope.currentPos == $scope.videos.length-1){
+        if($scope.currentPos >= $scope.videos.length-2){
           //need a new video
           $http({method: 'GET', url: '/next'}).
             success(function(data, status, headers, config) {
-              console.log(data)
               $scope.videos.push(data)
               nextVideo = $scope.videos[++$scope.currentPos]
               nextVideoId = nextVideo.videoId
-              $scope.currentVideo = nextVideo
-              $scope.player.loadVideoById(nextVideoId)
-              $scope.doFadeInfo()
             }).
-            error(function(data, status, headers, config) {
-            });
+            error(function(data, status, headers, config) {}
+          );
+          $scope.currentVideo = nextVideo
+          $scope.player.loadVideoById(nextVideoId)
+          $scope.doFadeInfo()
         }else{
           nextVideo = $scope.videos[++$scope.currentPos]
           nextVideoId = nextVideo.videoId

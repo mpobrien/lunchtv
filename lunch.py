@@ -16,12 +16,8 @@ db = MongoClient()['lunch']
 @app.route("/")
 def videos():
     video = random_video()
-    return render_template("videos.html", videos=[video])
-
-@app.route("/")
-def next_videos():
-    videos = db.videos.find({},{"_id":0})
-    return render_template("videos.html", videos=[v for v in videos])
+    video2 = random_video()
+    return render_template("videos.html", videos=[video, video2])
 
 def random_video():
     rand = random.random()
