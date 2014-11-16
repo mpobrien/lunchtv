@@ -79,7 +79,7 @@
   </head>
   <body ng-controller="VideoController" 
     ng-init="setupIframe()" 
-    ng-keypress="keyPressed($event)"  
+    ng-keydown="keyPressed($event)"  
     ng-mousemove="doFadeInfo()">
     <div id="overlay">
       <div id="bug"><a></a></div>
