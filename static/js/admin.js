@@ -18,6 +18,56 @@ lunchTvApp.config(function($interpolateProvider) {
 });
 
 function VideoForm($scope, $http, $window) {
+  $scope.allvids = $window.allvids
+  $scope.vid = { }
+  $scope.$watch('vid.url', function(){
+    if($scope.vid.url != undefined){
+      console.log("ok got ",$scope.vid.url)
+      if($scope.vid.url.indexOf("http://") >= 0 || $scope.vid.url.indexOf("https://")>=0) {
+        console.log("yeah",$scope.vid.url)
+        $scope.previewurl = $scope.vid.url
+        $('#vidplayer')[0].src = $scope.vid.url
+      }
+    }else{
+      console.log("no got ",$scope.vid.url)
+    }
+  });
+
+  $scope.remove = function(v){
+    $http.delete('/admin/video/' + v._id)
+    $scope.allvids = _.without($scope.allvids, _.findWhere($scope.allvids, {_id:v._id}));
+  }
+
+  $scope.setvid = function(v){
+    $scope.vid = v
+  }
+
+  $scope.update = function(){
+    if($scope.vid._id){
+      console.log("doing update")
+      $http.post('/admin/video/' + $scope.vid._id, $scope.vid).success(
+          function(){
+            var match = _.findWhere(allvids , {_id : $scope.vid._id });
+            if(match){
+              for(var k in $scope.vid) match[k]=$scope.vid[k];
+            }
+          })
+    }else{
+      console.log("doing insert")
+      $http.post('/admin/video', $scope.vid).success(
+          function(data, status, headers, config){
+            $scope.vid._id = data['oid']
+            console.log("args", arguments)
+            $scope.allvids.push($scope.vid)
+            $scope.vid = {}
+          })
+    }
+  }
+}
+
+
+
+  /*
 	$scope.videoIds = $window.videoIds
 
     $scope.userType = 'guest';
@@ -37,6 +87,7 @@ function VideoForm($scope, $http, $window) {
 		});
 	}
 }
+  */
 
 
 

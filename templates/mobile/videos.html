@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+    <script>
+      var allvids = {{videos|tojson}}
+      var curVideo = 0;
+      document.addEventListener("DOMContentLoaded", function(event) { 
+          //do work
+        var videoPlayer = document.getElementById('videoPlayer');
+        console.log(videoPlayer)
+      });
+      function MobileVidController($scope, $window, $http){
+        $scope.allvids = $window.allvids
+        videoPlayer = document.getElementById('videoPlayer')
+        var index = 0
+        videoPlayer.onended = function(){
+          console.log("ended!")
+          index = (index+1) % allvids.length
+          $scope.nextVideo()
+        }
+        videoPlayer.src = allvids[index].url
+        videoPlayer.play()
+        videoPlayer.onseeked = function(){
+          //console.log("seeked")
+        }
+        $scope.nextVideo = function(){
+          $http({method: 'GET', url: '/next'}).
+            success(function(data, status, headers, config) {
+              $scope.allvids.push(data)
+              videoPlayer.src = data.url
+              videoPlayer.play()
+            }).
+            error(function(data, status, headers, config) {})
+        }
+      }
+    </script>
+  </head>
+  <body ng-app ng-controller="MobileVidController">
+    <video width="100%"  height="100%" controls id="videoPlayer" poster="https://s3-us-west-2.amazonaws.com/s.cdpn.io/93411/bug_trip.gif">
+      <source src="https://s3-us-west-2.amazonaws.com/lunchvids/The+Pizza+Underground.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+        </video>
+
+  </body>
+</html> 

@@ -1,22 +1,75 @@
 <html>
   <head>
     <script type="text/javascript" src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="/static/js/admin.js"></script>
      <script src="https://apis.google.com/js/client.js?onload=load"></script>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+      .vidlistitem{
+        max-width:300px;
+        text-overflow: ellipsis;
+        overflow-x: overlay;
+      }
+      .highlighted{
+        background-color: rgb(255, 249, 234);
+      }
+    </style>
 
     <script type="text/javascript">
-      var videoIds = {{videos|tojson}}
+      var allvids = {{videos|tojson}}
     </script>
   </head>
-  <body ng-app ="lunchTvApp">
-    <form method="post" ng-controller="VideoForm" ng-submit="submit()">
-      <div>
-        <input type="text" ng-model="newVideoId"/>
+  <body ng-app ="lunchTvApp" ng-controller="VideoForm">
+    <div class="container">
+      <div class="row">
+        <div class="six columns">
+          <table>
+            <tr ng-repeat="v in allvids" ng-class="{highlighted:v._id == vid._id}">
+              <td ng-click="remove(v)">[X]</td><td class="vidlistitem" ng-click="setvid(v)"> [[v.who]] - [[v.what]] : [[v.url]] </td>
+            </tr>
+          </table>
+        </div>
+        <div class="six columns">
+          <form method="post"  ng-submit="submit()">
+            <table>
+              <tr>
+                <td><label>AWS URL:</label></td>
+                <td><input name="awsurl" type="text" ng-model="vid.url"/></td>
+              </tr>
+              <tr>
+                <td><label>Bumper</label></td>
+                <td><input name="bumper" type="checkbox" ng-model="vid.bumper"/></td>
+              </tr>
+              <tr>
+                <td><label>Video ID (optional):</label></td>
+                <td><input name="videoid" type="text" ng-model="vid.id"/></td>
+              </tr>
+              <tr>
+                <td><label>Who:</label></td>
+                <td><input name="who" type="textarea" ng-model="vid.who"/></td>
+              </tr>
+              <tr>
+                <td><label>What:</label></td>
+                <td><input name="what" type="textarea" ng-model="vid.what"/></td>
+              </tr>
+              <tr>
+                <td colspan="2" style="text-align:center"><input type="submit" ng-click="update()" value="submit"/></td>
+              </tr>
+            </table>
+          </form>
+          <div>
+            <video width="200px" controls id="vidplayer">
+            <source type="video/mp4">
+            Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
       </div>
-      <ul ng-repeat="v in videoIds">
-        <li><a ng-click="deleteVideo(v)" href="">[X]</a> &nbsp;[[v]] </li>
-      </ul>
-    </form>
+    </div>
+
+    
+
   </body>
 </html>
