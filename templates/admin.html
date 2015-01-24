@@ -26,7 +26,7 @@
       <div class="row">
         <div class="six columns">
           <table>
-            <tr ng-repeat="v in allvids" ng-class="{highlighted:v._id == vid._id}">
+            <tr ng-repeat="v in allvids track by $index" ng-class="{highlighted:v._id == vid._id}">
               <td ng-click="remove(v)">[X]</td><td class="vidlistitem" ng-click="setvid(v)"> [[v.who]] - [[v.what]] : [[v.url]] </td>
             </tr>
           </table>
