@@ -121,8 +121,9 @@ def tojson_special(dateobj):
     return json.dumps(dateobj, default=dthandler)
 
 
+app.debug = True
+app.json_encoder = JSONEncoder
 if __name__ == "__main__":
-    app.json_encoder = JSONEncoder
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", port=80, debug=True)
 
 
