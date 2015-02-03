@@ -1,6 +1,6 @@
-var vids = db.videos.find()
+var vids = db.vids.find()
 while(vids.hasNext()){
   var nextvid = vids.next()
-  db.videos.update({_id:nextvid._id},{$set:{rand:Math.random()}})
+  db.vids.update({_id:nextvid._id},{$set:{rand:Math.random()}})
 }
-db.videos.ensureIndex({rand:1})
+db.vids.ensureIndex({rand:1})

@@ -51,9 +51,18 @@ def random_video(user=None, store_watched=True):
         if user_watched:
             clause = {"_id":{"$nin":user_watched['watched']}}
 
+    r = random.random()
+    query.update({"rand":{"$gte":r}})
+
     if clause:
         query.update(clause)
+
     result = db.vids.find_one(query)
+    if not result:
+        query = {}
+        query.update(clause)
+        query.update({"rand":{"$lte":r}})
+        result = db.vids.find_one(query)
 
     # user watched everything? reset!
     if not result:
