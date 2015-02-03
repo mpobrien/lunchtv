@@ -28,6 +28,7 @@ prevKeys = [ 113, 119, 101, 114, 116, 49, 50, 51, 52, 53, 65,
              115, 100, 102, 103, 122, 120, 99, 118, 98, 97 ]
 
 lunchtv.controller('VideoController', function($scope, $window, $http) {
+    var bumpers = $window.bumpers
     var done = false;
     $scope.playedVideos = []
     //$scope.videos = $window.videoIds
@@ -38,15 +39,15 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
 
     $scope.nextVideo = function(){
       console.log("next video")
-  /*
       if($scope.videoIndex+1 == $scope.playedVideos.length){
         //Time to play a bumper?
         console.log(+new Date(), lastBumperTime, bumperThreshold)
         if((+new Date()) - lastBumperTime > bumperThreshold){
           console.log("playing bumper!")
-          //$scope.playVideo(bumpers[++BUMPER_INDEX % bumpers.length])
+          $scope.playVideo(bumpers[++BUMPER_INDEX % bumpers.length])
           lastBumperTime = +new Date()
           $scope.bumpered = true
+          return
         }else{
           $scope.bumpered = false
           $http({method: 'GET', url: '/next'}).
@@ -64,7 +65,6 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
           $scope.videoIndex++
           $scope.playVideoAtIndex($scope.videoIndex)
       }
-      */
       $http({method: 'GET', url: '/next'}).
         success(function(data, status, headers, config) {
           console.log("not playing bumper!")
@@ -84,7 +84,7 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
 
     $scope.playVideo = function(vid){
       $scope.currentVideo = vid
-      console.log("playing", vid.details)
+      console.log("playing", vid)
       videoPlayer.src=vid.url
       videoPlayer.play()
       //$scope.player.loadVideoById(vid.videoId)

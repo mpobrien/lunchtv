@@ -28,6 +28,9 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         return json.JSONEncoder.default(self, o)
 
+def get_bumpers():
+    return db.vids.find({"bumper":True})
+
 @app.route("/")
 @mobile_template('{mobile/}videos.html')
 def videos(template):
@@ -38,13 +41,13 @@ def videos(template):
     user_id = session['id']
     video = random_video(user_id, False)
     video2 = random_video(user_id, False)
-    return render_template(template, videos=[video, video2])
+    return render_template(template, videos=[video, video2], bumpers=list(get_bumpers()))
 
 def random_video(user=None, store_watched=True):
     rand = random.random()
     direction = random.choice([True, False])
 
-    query = {}
+    query = {"bumper":False}
     clause = None
     if user:
         user_watched = db.user_watched.find_one({"_id":str(user)},{"watched":1})
@@ -59,7 +62,7 @@ def random_video(user=None, store_watched=True):
 
     result = db.vids.find_one(query)
     if not result:
-        query = {}
+        query = {"bumper":False}
         query.update(clause)
         query.update({"rand":{"$lte":r}})
         result = db.vids.find_one(query)
