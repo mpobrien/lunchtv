@@ -100,6 +100,7 @@ def addvideo():
            "bumper":"bumper" in videoInfo,
            "videoId":videoInfo.get("id", None),
            "who":videoInfo.get("who", None),
+           "rand":random.random(),
            "what":videoInfo.get("what", None), }
     oid = db.vids.insert(vid)
     return json.dumps({"oid":str(oid)})
@@ -115,8 +116,9 @@ def updatevideo(videoid):
     vid = {"url":videoInfo["url"],
            "bumper":"bumper" in videoInfo,
            "videoId":videoInfo.get("id", None),
+           "rand":random.random(),
            "who":videoInfo.get("who", None),
-           "what":videoInfo.get("what", None), }
+           "what":videoInfo.get("what", None)}
     db.vids.update({"_id":bson.ObjectId(videoid)}, vid)
     return json.dumps({"ok":1})
 
