@@ -32,38 +32,40 @@
           </table>
         </div>
         <div class="six columns">
-          <form method="post"  ng-submit="submit()">
-            <table>
-              <tr>
-                <td><label>AWS URL:</label></td>
-                <td><input name="awsurl" type="text" ng-model="vid.url"/></td>
-              </tr>
-              <tr>
-                <td><label>Bumper</label></td>
-                <td><input name="bumper" type="checkbox" ng-model="vid.bumper"/></td>
-              </tr>
-              <tr>
-                <td><label>Video ID (optional):</label></td>
-                <td><input name="videoid" type="text" ng-model="vid.id"/></td>
-              </tr>
-              <tr>
-                <td><label>Who:</label></td>
-                <td><input name="who" type="textarea" ng-model="vid.who"/></td>
-              </tr>
-              <tr>
-                <td><label>What:</label></td>
-                <td><input name="what" type="textarea" ng-model="vid.what"/></td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align:center"><input type="submit" ng-click="update()" value="submit"/></td>
-              </tr>
-            </table>
-          </form>
           <div>
-            <video width="200px" controls id="vidplayer">
-            <source type="video/mp4">
-            Your browser does not support the video tag.
-            </video>
+            <form method="post"  ng-submit="submit()">
+              <table>
+                <tr>
+                  <td><label>AWS URL:</label></td>
+                  <td><input name="awsurl" type="text" ng-model="vid.url"/></td>
+                </tr>
+                <tr>
+                  <td><label>Bumper</label></td>
+                  <td><input name="bumper" type="checkbox" ng-model="vid.bumper"/></td>
+                </tr>
+                <tr>
+                  <td><label>Video ID (optional):</label></td>
+                  <td><input name="videoid" type="text" ng-model="vid.id"/></td>
+                </tr>
+                <tr>
+                  <td><label>Who:</label></td>
+                  <td><input name="who" type="textarea" ng-model="vid.who"/></td>
+                </tr>
+                <tr>
+                  <td><label>What:</label></td>
+                  <td><input name="what" type="textarea" ng-model="vid.what"/></td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="text-align:center"><input type="submit" ng-click="update()" value="submit"/></td>
+                </tr>
+              </table>
+            </form>
+            <div>
+              <video width="200px" controls id="vidplayer">
+              <source type="video/mp4">
+              Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </div>
       </div>
