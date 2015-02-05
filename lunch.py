@@ -48,7 +48,7 @@ def random_video(user=None, store_watched=True):
     direction = random.choice([True, False])
 
     query = {"bumper":False}
-    clause = None
+    clause = {}
     if user:
         user_watched = db.user_watched.find_one({"_id":str(user)},{"watched":1})
         if user_watched:
