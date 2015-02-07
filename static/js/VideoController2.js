@@ -22,8 +22,8 @@ var lastBumperTime = -Infinity
 BUMPER_INDEX = -1
  BUMPER_INTERVAL = 5
 
-prevKeys = [ 81, 87, 69, 82, 84, 65, 83, 68, 70, 90, 88, 67, 86, 49, 50, 51, 52, 53]
-nextKeys = [ 48, 57, 56, 55, 54, 80, 79, 73, 85, 89, 76, 75, 74, 72, 71, 222, 191, 190, 188, 77, 78, 66]
+prevKeys = [ 81, 87, 69, 82, 84, 65, 83, 68, 70, 90, 88, 67, 86, 49, 50, 51, 52, 53, 37]
+nextKeys = [ 48, 57, 56, 55, 54, 80, 79, 73, 85, 89, 76, 75, 74, 72, 71, 222, 191, 190, 188, 77, 78, 66, 39, 13]
 
 function shuffle(array) {
     var counter = array.length, temp, index;
