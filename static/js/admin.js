@@ -33,9 +33,15 @@ function VideoForm($scope, $http, $window) {
     }
   });
 
+  $scope.showuploader = function(){
+    $scope.uploadenabled = true
+  }
+
   $scope.remove = function(v){
-    $http.delete('/admin/video/' + v._id)
-    $scope.allvids = _.without($scope.allvids, _.findWhere($scope.allvids, {_id:v._id}));
+    if(confirm('delete this video - you sure?')){
+      $http.delete('/admin/video/' + v._id)
+      $scope.allvids = _.without($scope.allvids, _.findWhere($scope.allvids, {_id:v._id}));
+    }
   }
 
   $scope.setvid = function(v){
@@ -63,59 +69,51 @@ function VideoForm($scope, $http, $window) {
           })
     }
   }
+
+  $scope.uploadFiles = function(event) {
+    event.stopPropagation(); 
+    event.preventDefault(); 
+    var data = new FormData();
+    fileobj = $('input[type=file]').get(0).files[0]
+    data.append("key", "uploads/${filename}")
+    data.append("AWSAccessKeyId", "AKIAI7CP6GPX7NGZU2SA")
+    data.append("acl", "public-read")
+    data.append("policy", $window.policy)
+    data.append("signature", $window.signature)
+    data.append("Content-Type", "video/mp4")
+    data.append("file", fileobj)
+
+    $scope.uploading=true
+    $.ajax({
+      url: 'https://lunchvids.s3.amazonaws.com/',
+      type: 'POST',
+      data: data,
+      crossDomain: true,
+      cache: false,
+      xhr: function() {
+        var xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener("progress", function(evt){
+          if (evt.lengthComputable) {
+            var pct = (evt.loaded / evt.total) * 100;
+            $scope.percentComplete = pct.toFixed(2)
+            console.log($scope.percentComplete)
+            $scope.$digest()
+          }
+        }, false);
+        return xhr;
+      },
+      processData: false,
+      contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+      success: function(data, textStatus, jqXHR) {
+        $scope.vid.url = "https://lunchvids.s3.amazonaws.com/uploads/" + encodeURIComponent(fileobj.name)
+        $scope.uploading=false
+        $scope.$digest()
+        console.log("success!", "https://lunchvids.s3.amazonaws.com/uploads/" + encodeURIComponent(fileobj.name))
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error uploading: ", textStatus)
+      }
+     });
+  }
 }
 
-
-
-  /*
-	$scope.videoIds = $window.videoIds
-
-    $scope.userType = 'guest';
-
-    $scope.submit = function(){
-		var data = {videoId:$scope.newVideoId}
-		$http.post('/admin/video', data).success(
-		function(){
-			$scope.videoIds.push($scope.newVideoId)
-			$scope.newVideoId = ''
-		});
-	}
-	$scope.deleteVideo = function(v){
-		$http.delete('/admin/video/' + v).success(
-		function(){
-			$scope.videoIds.remove(v)
-		});
-	}
-}
-  */
-
-
-
-/*
-youtubeid = "AIzaSyBrchxP9dHCq8130FkK3dz8o1PEsTqaQQM"
-
-function VideoForm($scope) {
-
-    $scope.userType = 'guest';
-
-    $scope.submit = function(){
-		console.log($scope.newVideoId)
-	}
-
-}
-
-function makeRequest(){
-	var restRequest = gapi.client.request({
-	  'path': '/youtube/v3/videos',
-	  'params': {'part': 'snippet', 'id': 'gFuGfwIhv14', key:youtubeid}
-	});
-
-	restRequest.execute(function(resp) { console.log(resp); });
-}
-
-function load() {
-  gapi.client.setApiKey(youtubeid);
-  gapi.client.load('youtube', 'v3', makeRequest);
-}
-
-*/

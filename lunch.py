@@ -16,10 +16,15 @@ from flask.ext.mobility.decorators import mobile_template
 from werkzeug.datastructures import CallbackDict
 from pymongo import MongoClient
 import uuid
+import base64
+import hmac, hashlib
 
 app = Flask(__name__)
 Mobility(app)
 app.secret_key = '\xb2\xe3\x0b\x8b\x15m\xa5|\xdb\xa1\xebC\xc5Oe"\xfd-;\x08\xb3I\xc7u'
+AWS_SECRET_ACCESS_KEY = open('accesskey', 'r').read().strip()
+if not AWS_SECRET_ACCESS_KEY:
+    raise "no access key?"
 
 db = MongoClient()['lunch']
 
@@ -31,6 +36,20 @@ class JSONEncoder(json.JSONEncoder):
 
 def get_bumpers():
     return db.vids.find({"bumper":True})
+
+@app.route("/upload")
+def upload():
+    policy_document = json.dumps({"expiration": "2020-01-01T00:00:00Z",
+      "conditions": [ 
+        {"bucket": "lunchvids"}, 
+        ["starts-with", "$key", "uploads/"],
+        {"acl": "public-read"},
+        {"content-type": "video/mp4"},
+        ]})
+
+    policy = base64.b64encode(policy_document)
+    signature = base64.b64encode(hmac.new(AWS_SECRET_ACCESS_KEY, policy, hashlib.sha1).digest())
+    return render_template("upload.html", policy=policy, signature=signature)
 
 @app.route("/")
 @mobile_template('{mobile/}videos.html')
@@ -135,7 +154,17 @@ def updatevideo(videoid):
 
 @app.route("/admin")
 def admin():
-    return render_template("admin.html", videos=list(db.vids.find()))
+    policy_document = json.dumps({"expiration": "2020-01-01T00:00:00Z",
+      "conditions": [ 
+        {"bucket": "lunchvids"}, 
+        ["starts-with", "$key", "uploads/"],
+        {"acl": "public-read"},
+        {"content-type": "video/mp4"},
+        ]})
+
+    policy = base64.b64encode(policy_document)
+    signature = base64.b64encode(hmac.new(AWS_SECRET_ACCESS_KEY, policy, hashlib.sha1).digest())
+    return render_template("admin.html", videos=list(db.vids.find()),  policy=policy, signature=signature)
 
 @app.template_filter('tojson_special')
 def tojson_special(dateobj):

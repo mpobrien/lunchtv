@@ -4,6 +4,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="/static/js/admin.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
      <script src="https://apis.google.com/js/client.js?onload=load"></script>
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <style>
@@ -19,6 +20,8 @@
 
     <script type="text/javascript">
       var allvids = {{videos|tojson}}
+      var policy = "{{policy}}"
+      var signature = "{{signature}}"
     </script>
   </head>
   <body ng-app ="lunchTvApp" ng-controller="VideoForm">
@@ -27,16 +30,36 @@
         <div class="six columns">
           <table>
             <tr ng-repeat="v in allvids track by $index" ng-class="{highlighted:v._id == vid._id}">
-              <td ng-click="remove(v)">[X]</td><td class="vidlistitem" ng-click="setvid(v)"> [[v.who]] - [[v.what]] : [[v.url]] </td>
+              <td ng-click="remove(v)" style="cursor:pointer"><i class="fa fa-times"></i></td>
+              <td class="vidlistitem" ng-click="setvid(v)" style="white-space:nowrap">[[v.who]] - [[v.what]] - [[v.url]] </td>
+              <td>[[v.bumper ? 'bmpr' : '']]</td>
             </tr>
           </table>
         </div>
         <div class="six columns">
           <div style="position:fixed; top:0px">
-            <form method="post"  ng-submit="submit()">
+            <div style="border:1px solid black" ng-show="uploadenabled">
+              <form action="https://lunchvids.s3.amazonaws.com/" method="post" enctype="multipart/form-data" id="s3form" ng-submit="uploadFiles($event)">
+                <label for="file">Upload a file</label>
+                <div ng-show="uploading">Uploading:[[percentComplete]]%</div>
+                <input name="key" type="hidden" value="uploads/${filename}"> 
+                <input name="AWSAccessKeyId" type="hidden" value="AKIAI7CP6GPX7NGZU2SA"/>
+                <input name="acl" type="hidden" value="public-read"/>
+                <input name="success_action_redirect" type="hidden" value="http://localhost/"/>
+                <input name="policy" type="hidden" value="{{policy}}"/>
+                <input name="signature" type="hidden" value="{{signature}}"/>
+                <input name="Content-Type" type="hidden" value="video/mp4"/>
+                <input name="file" type="file"> 
+                </br>
+                <input type="submit" value="Upload File to S3"> 
+              </form> 
+            </div>
+            <form method="post" ng-submit="submit()">
               <table>
                 <tr>
-                  <td><label>AWS URL:</label></td>
+                  <td>
+                    <label>AWS URL: <a href="#" style="font-size:.6em" ng-click="showuploader()">upload?</a></label>
+                  </td>
                   <td><input name="awsurl" type="text" ng-model="vid.url"/></td>
                 </tr>
                 <tr>

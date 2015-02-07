@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript">
+      function uploadFiles(event) {
+        event.stopPropagation(); 
+        event.preventDefault(); 
+        var data = new FormData();
+        fileobj = $('input[type=file]').get(0).files[0]
+        data.append("key", "uploads/${filename}")
+        data.append("AWSAccessKeyId", "AKIAI7CP6GPX7NGZU2SA")
+        data.append("acl", "public-read")
+        data.append("policy", "{{policy}}")
+        data.append("signature", "{{signature}}")
+        data.append("Content-Type", "video/mp4")
+        data.append("file", fileobj)
+
+        $.ajax({
+          url: 'https://lunchvids.s3.amazonaws.com/',
+          type: 'POST',
+          data: data,
+          crossDomain: true,
+          cache: false,
+          beforeSend: function(xhr){
+            //Upload progress
+            xhr.upload.addEventListener("progress", function(evt){
+              if (evt.lengthComputable) {  
+                var percentComplete = evt.loaded / evt.total;
+                //Do something with upload progress
+              }
+            }, false); 
+          },
+          processData: false,
+          contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+          success: function(data, textStatus, jqXHR) {
+            console.log("success!", "https://lunchvids.s3.amazonaws.com/uploads/" + encodeURIComponent(fileobj.name))
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            alert("Error uploading: ", textStatus)
+          }
+         });
+      }
+      $(document).ready(function(){
+        $('form').submit(uploadFiles);
+      })
+    </script>
+  </head>
+  <body>
+    <form action="https://lunchvids.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
+      File to upload to S3: 
+      <input name="key" type="hidden" value="uploads/${filename}"> 
+      <input name="AWSAccessKeyId" type="hidden" value="AKIAI7CP6GPX7NGZU2SA"/>
+      <input name="acl" type="hidden" value="public-read"/>
+      <input name="success_action_redirect" type="hidden" value="http://localhost/"/>
+      <input name="policy" type="hidden" value="{{policy}}"/>
+      <input name="signature" type="hidden" value="{{signature}}"/>
+      <input name="Content-Type" type="hidden" value="video/mp4"/>
+      <input name="file" type="file"> 
+      <input type="submit" value="Upload File to S3"> 
+    </form> 
+  </body>
+</html>
+
