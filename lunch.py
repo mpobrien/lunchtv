@@ -2,6 +2,7 @@
 from flask import Flask, url_for, request, render_template, session
 import json
 from datetime import datetime
+import pymongo
 from pymongo import MongoClient
 import random
 import requests
@@ -58,14 +59,21 @@ def random_video(user=None, store_watched=True):
     query.update({"rand":{"$gte":r}})
 
     if clause:
+        print "querying 1", clause
         query.update(clause)
 
-    result = db.vids.find_one(query)
-    if not result:
+    docs = list(db.vids.find(query).sort("rand",pymongo.ASCENDING).limit(1))
+    result = None
+    if docs:
+        result = docs[0]
+    else:
         query = {"bumper":False}
         query.update(clause)
         query.update({"rand":{"$lte":r}})
-        result = db.vids.find_one(query)
+        print "querying 2", clause
+        docs = list(db.vids.find(query).sort("rand", pymongo.DESCENDING).limit(1) )
+        if docs:
+            result = docs[0]
 
     # user watched everything? reset!
     if not result:

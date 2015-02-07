@@ -23,14 +23,35 @@ BUMPER_INDEX = -1
  BUMPER_INTERVAL = 5
 
 nextKeys = [ 121, 104, 98, 117, 106, 105, 107, 109, 111,
-             108, 44, 112, 59, 46, 91, 39, 47, 93, 13 ]
+             108, 44, 112, 59, 46, 39, 47, 13 ]
 prevKeys = [ 113, 119, 101, 114, 116, 49, 50, 51, 52, 53, 65,
              115, 100, 102, 103, 122, 120, 99, 118, 98, 97 ]
 
+function shuffle(array) {
+    var counter = array.length, temp, index;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+
+    return array;
+}
+
 lunchtv.controller('VideoController', function($scope, $window, $http) {
-    var bumpers = $window.bumpers
+    var bumpers = shuffle($window.bumpers)
     var done = false;
     $scope.playedVideos = []
+    console.log(bumpers)
     //$scope.videos = $window.videoIds
     //$scope.videos.unshift({"videoId": "3YssYJUNkXo"})
     $scope.videoIndex = -1
@@ -65,7 +86,7 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
           $scope.videoIndex++
           $scope.playVideoAtIndex($scope.videoIndex)
       }
-      $http({method: 'GET', url: '/next'}).
+      /*$http({method: 'GET', url: '/next'}).
         success(function(data, status, headers, config) {
           console.log("not playing bumper!")
           var video = data
@@ -74,6 +95,7 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
           $scope.playVideoAtIndex($scope.videoIndex)
         }).
         error(function(data, status, headers, config) {})
+        */
     }
 
     $scope.playVideoAtIndex = function(videoIndex){
@@ -109,7 +131,7 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
     }
 
     $scope.keyPressed = function($event){
-        console.log($event.which)
+        console.log("key code",$event.which)
         if($event.which==PAUSE_KEY){
           $scope.togglePause()
         }
