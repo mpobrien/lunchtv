@@ -144,7 +144,7 @@ def deletevideo(videoid):
 def updatevideo(videoid):
     videoInfo = json.loads(request.data)
     vid = {"url":videoInfo["url"],
-           "bumper":"bumper" in videoInfo,
+           "bumper":videoInfo.get("bumper", False),
            "videoId":videoInfo.get("id", None),
            "rand":random.random(),
            "who":videoInfo.get("who", None),

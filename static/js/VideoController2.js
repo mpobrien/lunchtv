@@ -105,7 +105,11 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
     $scope.playVideo = function(vid){
       $scope.currentVideo = vid
       console.log("playing", vid)
+      //videoPlayer.autoplay = true
       videoPlayer.src=vid.url
+      videoPlayer.autobuffer = "auto"
+      videoPlayer.preload = true
+      videoPlayer.load()
       videoPlayer.play()
       //$scope.player.loadVideoById(vid.videoId)
     }
@@ -143,6 +147,57 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
     videoPlayer.onended = function(){
       $scope.nextVideo()
     }
+
+    nextEvent = +new Date()
+
+    function checkin(){
+      timeSince = +new Date() - nextEvent
+      nextEvent = +new Date()
+      return timeSince
+    }
+
+
+    videoPlayer.onemptied = function(){
+      console.log("onemptied", checkin());
+    }
+    videoPlayer.onloadedmetadata = function(){
+      console.log("onloadedmetadata", checkin());
+    }
+    videoPlayer.onloadeddata = function(){
+      console.log("onloadeddata", checkin());
+    }
+    videoPlayer.oncanplay = function(){
+      console.log("oncanplay", checkin());
+    }
+    videoPlayer.oncanplaythrough = function(){
+      console.log("oncanplaythrough", checkin());
+    }
+    videoPlayer.onplaying = function(){
+      console.log("onplaying", checkin());
+    }
+    videoPlayer.onwaiting = function(){
+      console.log("onwaiting", checkin());
+    }
+
+    videoPlayer.ondurationchange = function(){
+      console.log("ondurationchange", checkin());
+    }
+    videoPlayer.ontimeupdate = function(){
+      checkin()
+    }
+    videoPlayer.onplay = function(){
+      console.log("onplay", checkin());
+    }
+    videoPlayer.onpause = function(){
+      console.log("onpause", checkin());
+    }
+    videoPlayer.onratechange = function(){
+      console.log("onratechange", checkin());
+    }
+    videoPlayer.onvolumechange = function(){
+      console.log("onvolumechange", checkin());
+    }
+
     $scope.nextVideo()
 
     lastBumperTime = +new Date()
