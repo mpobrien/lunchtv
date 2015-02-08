@@ -9,7 +9,7 @@
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <style>
       .vidlistitem{
-        max-width:300px;
+        max-width:500px;
         text-overflow: ellipsis;
         overflow-x: overlay;
       }
@@ -27,7 +27,7 @@
   <body ng-app ="lunchTvApp" ng-controller="VideoForm">
     <div class="container">
       <div class="row">
-        <div class="six columns">
+        <div class="eight columns">
           <table>
             <tr ng-repeat="v in allvids track by $index" ng-class="{highlighted:v._id == vid._id}">
               <td ng-click="remove(v)" style="cursor:pointer"><i class="fa fa-times"></i></td>
@@ -38,7 +38,7 @@
             </tr>
           </table>
         </div>
-        <div class="six columns">
+        <div class="four columns">
           <div style="position:fixed; top:0px">
             <div style="border:1px solid black" ng-show="uploadenabled">
               <form action="https://lunchvids.s3.amazonaws.com/" method="post" enctype="multipart/form-data" id="s3form" ng-submit="uploadFiles($event)">
