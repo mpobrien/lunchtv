@@ -33,7 +33,7 @@ function VideoForm($scope, $http, $window) {
     }
   });
 
-  $scope.fileOnly = function(f){
+  $scope.fileonly = function(f){
     return f.substring(f.lastIndexOf("/")+1)
   }
 
