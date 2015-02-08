@@ -33,6 +33,11 @@ function VideoForm($scope, $http, $window) {
     }
   });
 
+  $scope.fileOnly = function(f){
+    return f.substring(f.lastIndexOf("/")+1)
+  }
+
+
   $scope.showuploader = function(){
     $scope.uploadenabled = true
   }
