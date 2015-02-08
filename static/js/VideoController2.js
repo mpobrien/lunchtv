@@ -56,6 +56,10 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
     $scope.bumpered = true
     videoPlayer = document.getElementById('videoPlayer')
 
+    $scope.fileOnly = function(f){
+      return f.substring(f.lastIndexOf("/")+1)
+    }
+
     $scope.nextVideo = function(){
       console.log("next video")
       if($scope.videoIndex+1 == $scope.playedVideos.length){

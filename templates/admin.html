@@ -31,7 +31,9 @@
           <table>
             <tr ng-repeat="v in allvids track by $index" ng-class="{highlighted:v._id == vid._id}">
               <td ng-click="remove(v)" style="cursor:pointer"><i class="fa fa-times"></i></td>
-              <td class="vidlistitem" ng-click="setvid(v)" style="white-space:nowrap">[[v.who]] - [[v.what]] - [[v.url]] </td>
+              <td class="vidlistitem" ng-click="setvid(v)" style="white-space:nowrap">
+                [[v.who]] - [[v.what]] - [[fileonly(v.url)]]
+              </td>
               <td>[[v.bumper ? 'bmpr' : '']]</td>
             </tr>
           </table>
