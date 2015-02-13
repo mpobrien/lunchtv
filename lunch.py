@@ -56,12 +56,14 @@ def upload():
 def videos(template):
     print request.MOBILE
     user_id = None
+    newuser = False
     if 'id' not in session:
+        newuser = True
         session['id'] = uuid.uuid4()
     user_id = session['id']
     video = random_video(user_id, False)
     video2 = random_video(user_id, False)
-    return render_template(template, videos=[video, video2], bumpers=list(get_bumpers()))
+    return render_template(template, videos=[video, video2], bumpers=list(get_bumpers()), newuser=newuser)
 
 def random_video(user=None, store_watched=True):
     rand = random.random()

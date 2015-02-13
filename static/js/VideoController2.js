@@ -15,7 +15,7 @@ bumpers = [
 ]
 */
 PAUSE_KEY = 32
-var bumperThreshold = 60 * 3 * 1000 // play a bumper every 3 minutes
+var bumperThreshold = 60 * 1.5 * 1000 // play a bumper every 1.5 minutes
 //var bumperThreshold = 10 * 1000
 var lastBumperTime = -Infinity
 
@@ -49,15 +49,23 @@ lunchtv.controller('VideoController', function($scope, $window, $http) {
     var bumpers = shuffle($window.bumpers)
     var done = false;
     $scope.playedVideos = []
-    console.log(bumpers)
-    //$scope.videos = $window.videoIds
-    //$scope.videos.unshift({"videoId": "3YssYJUNkXo"})
     $scope.videoIndex = -1
     $scope.bumpered = true
     videoPlayer = document.getElementById('videoPlayer')
+    var newuser = $window.newuser
+
+    var bumperPos = 0
+    for(var i=0;i<bumpers.length;i++){
+      if(bumpers[i].intro){
+        bumperPos = i
+        break
+      }
+    }
+    if(newuser){
+      BUMPER_INDEX = bumperPos-1
+    }
 
     $scope.nextVideo = function(){
-      console.log("next video")
       if($scope.videoIndex+1 == $scope.playedVideos.length){
         //Time to play a bumper?
         console.log(+new Date(), lastBumperTime, bumperThreshold)
