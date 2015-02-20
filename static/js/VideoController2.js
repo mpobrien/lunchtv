@@ -15,7 +15,7 @@ bumpers = [
 ]
 */
 PAUSE_KEY = 32
-var bumperThreshold = 60 * 1.5 * 1000 // play a bumper every 1.5 minutes
+var bumperThreshold = 60 * 5 * 1000 // play a bumper every 5 minutes
 //var bumperThreshold = 10 * 1000
 var lastBumperTime = -Infinity
 
