@@ -75,8 +75,9 @@
       #blurb a:link{
         color:white;
       }
-      #bug a{
+      #bug {
         position:absolute;
+        display:block;
         left:25px;
         bottom:25px;
         width:75px;
@@ -84,7 +85,7 @@
         background:url('/static/bug_rest.png')
       }
 
-      #bug a:hover{
+      #bug:hover{
         background:url('/static/bug_trip.gif')
       }
 
@@ -95,7 +96,7 @@
     ng-keydown="keyPressed($event)"  
     ng-mousemove="doFadeInfo()">
     <div id="overlay">
-      <div id="bug"><a></a></div>
+      <a id="bug" href="https://www.facebook.com/lunchdottv" target="_blank"></a>
     </div>
     <div id="vidcontainer">
       <video id="videoPlayer" preload="metadata"></video>
