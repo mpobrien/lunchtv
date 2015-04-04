@@ -27,6 +27,11 @@
         font-family: 'GothamRounded';
         src: url('/static/GothamRnd-Medium.otf');
       }
+      .tipjar-button {
+        position:absolute;
+        bottom:3px;
+        right:3px;
+      }
       body{
         margin:0px;
         background-color:black;
@@ -97,6 +102,8 @@
     ng-mousemove="doFadeInfo()">
     <div id="overlay">
       <a id="bug" href="https://www.facebook.com/lunchdottv" target="_blank"></a>
+      <a class="tipjar-button" href="https://www.tipjar.it/tips/new" data-url="http://lunch.tv" data-user="15">Tip</a>
+      <script async src="https://www.tipjar.it/button.js"></script>
     </div>
     <div id="vidcontainer">
       <video id="videoPlayer" preload="metadata"></video>
